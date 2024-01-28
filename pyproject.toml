@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "artflow"
+version = "0.1.0"
+description = "This project aims to develop a Command-Line Interface (CLI) tool designed for digital artists, graphic designers, and online shop owners. It focuses on streamlining the process of managing digital art assets, making it easier to prepare these assets for online sale platforms like Etsy and Shopify."
+authors = ["nin <nikolay.nikiforchuk@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+click = "^8.1.7"
+pillow = "^10.2.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
