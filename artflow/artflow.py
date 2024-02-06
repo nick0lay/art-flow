@@ -38,5 +38,23 @@ def resize(src, dist, size, unit, ppi):
     click.echo("Resizing images...")
     image_actions.resize(src, dist, size, unit, ppi)
 
+# @image.command()
+# @click.argument('image_path')
+# @click.option('--ratios', default="2x3,3x4,4x5,iso,11x14", help="Aspect ratios to use for cropping.")
+# def crop(image_path, ratios):
+#     """Crop the image at the center using the provided list of aspect ratios."""
+#     selected_ratios = ratios.split(',')
+#     image_actions.crop(image_path, selected_ratios)
+
+@image.command()
+@click.option("--src", default="./input", help="Folder with images to resize.")
+@click.option("--dist", default="./output", help="Folder to save resized images.")
+@click.option('--ratios', default="2x3,3x4,4x5,iso,11x14", help="Aspect ratios to use for cropping.")
+def crop(src, dist, ratios):
+    """Crop the image at the center using the provided list of aspect ratios."""
+    selected_ratios = ratios.split(',')
+    click.echo("Cropping images...")
+    image_actions.crop_all(src, dist, selected_ratios)
+
 if __name__ == '__main__':
     cli()
