@@ -1,3 +1,4 @@
+import dis
 import os
 from PIL import Image
 
@@ -58,7 +59,6 @@ def resize(src: str, dist: str, size: tuple[int, int], unit, dpi=DPI) -> None:
             if file.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
                 img_path = os.path.join(subdir, file)
                 img = Image.open(img_path)
-                print(size_pixel)
                 img_resized = img.resize(size_pixel)
 
                 relative_path = os.path.relpath(subdir, src)
@@ -94,7 +94,7 @@ def create_source_image(input_path: str, filename: str):
     img.save(image_path, dpi=dpi)
     return image_path
 
-def crop(image_path: str, selected_ratios: list[str], dpi=DPI) -> None:
+def crop(image_path: str, dist_dir: str, selected_ratios: list[str], dpi=DPI) -> None:
     with Image.open(image_path) as img:
         for ratio in selected_ratios:
             if ratio in ASPECT_RATIOS:
@@ -106,8 +106,9 @@ def crop(image_path: str, selected_ratios: list[str], dpi=DPI) -> None:
 
                 # Save the cropped image
                 file_name, file_ext = os.path.splitext(image_path)
-                print(file_name, file_ext)
                 output_filename = f"{file_name}_{ratio}.{file_ext}"
+                if dist_dir:
+                    output_filename = os.path.join(dist_dir, os.path.basename(output_filename))
 
                 cropped_img.save(output_filename, dpi=(dpi, dpi))
                 print(f"Cropped {image_path} to {ratio} and saved as {output_filename}")
@@ -119,5 +120,13 @@ def crop_all(src: str, dist: str, selected_ratios: list[str], dpi=DPI) -> None:
         for file in files:
             if file.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
                 img_path = os.path.join(subdir, file)
-                crop(img_path, selected_ratios, dpi)
+                # Create file distination path
+                output_subdir = None
+                if dist:
+                    relative_path = os.path.relpath(subdir, src)
+                    output_subdir = os.path.join(dist, relative_path)
+
+                    if not os.path.exists(output_subdir):
+                        os.makedirs(output_subdir)
+                crop(img_path, output_subdir, selected_ratios, dpi)
     print("All images cropped successfully.")
